@@ -92,6 +92,8 @@ echo "Repackage kata tarball ........... "
 pushd $KATADIR
 tar cvfJ ${WORKDIR}/ocp_${kata_tarball} .
 popd
-
 ls -l ${WORKDIR}/ocp_${kata_tarball}
+cd ${WORKDIR}
+
+sudo rm -fr ${TMPDIR}
 
