@@ -24,7 +24,7 @@ kata_tarball=${KATA_TARBALL_PATH##*/}
 KATADIR=${TMPDIR}/kata
 mkdir -p $KATADIR
 pushd $KATADIR
-tar -xvf ../${kata_tarball}
+sudo tar -xvf ../${kata_tarball}
 popd
 
 # Files to be replaced/updated
@@ -51,9 +51,9 @@ git cherry-pick ${PAUSECONT_FIX_COMMIT}
 # Build and update kata shim
 echo "Build and update kata shim ........... "
 make -C src/runtime
-cp src/runtime/containerd-shim-kata-v2 ${KATA_SHIM}
-cp src/runtime/kata-monitor ${KATA_MONITOR}
-cp src/runtime/kata-runtime ${KATA_RUNTIME}
+sudo cp src/runtime/containerd-shim-kata-v2 ${KATA_SHIM}
+sudo cp src/runtime/kata-monitor ${KATA_MONITOR}
+sudo cp src/runtime/kata-runtime ${KATA_RUNTIME}
 
 # Build pause container 
 echo "Build pause container ........... "
@@ -77,23 +77,23 @@ popd
 echo "Build and update initrd with new pause_bundle ........... "
 pushd ${TMPDIR}/kata-containers/tools/osbuilder/initrd-builder
 script -fec 'sudo -E AGENT_INIT=yes USE_DOCKER=true ./initrd_builder.sh "${ROOTFS_DIR}"'
-cp kata-containers-initrd.img ${KATA_COCO_INITRD}
+sudo cp kata-containers-initrd.img ${KATA_COCO_INITRD}
 popd
 
 popd
 
 # Update KATA SNP config file
 echo "Update ${KATA_SNP_CONFIG} ........... "
-sed -i 's/^path[[:space:]]=/path = \"\/usr\/libexec\/qemu-kvm\" #/g' ${KATA_SNP_CONFIG}
-sed -i 's/^firmware[[:space:]]=/firmware = \"\/usr\/share\/edk2\/ovmf\/OVMF.amdsev.fd\" #/g' ${KATA_SNP_CONFIG}
+sudo sed -i 's/^path[[:space:]]=/path = \"\/usr\/libexec\/qemu-kvm\" #/g' ${KATA_SNP_CONFIG}
+sudo sed -i 's/^firmware[[:space:]]=/firmware = \"\/usr\/share\/edk2\/ovmf\/OVMF.amdsev.fd\" #/g' ${KATA_SNP_CONFIG}
 
 # Repackage kata tarball 
 echo "Repackage kata tarball ........... "
 pushd $KATADIR
-tar cvfJ ${WORKDIR}/ocp_${kata_tarball} .
+sudo tar cvfJ ${WORKDIR}/ocp_${kata_tarball} .
 popd
 ls -l ${WORKDIR}/ocp_${kata_tarball}
 cd ${WORKDIR}
 
-sudo rm -fr ${TMPDIR}
+#sudo rm -fr ${TMPDIR}
 
