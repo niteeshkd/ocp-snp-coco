@@ -1,0 +1,11 @@
+apiVersion: node.k8s.io/v1
+kind: RuntimeClass
+metadata:
+  name: kata-snp
+handler: kata-snp
+overhead:
+  podFixed:
+    sev-snp.amd.com/esids: 1
+Scheduling:
+  Node Selector:
+    feature.node.kubernetes.io/amd-sev-snp: true
